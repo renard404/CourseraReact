@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import { Card, CardImg, CardText, CardBody, CardTitle } from 'reactstrap';
+import { COMMENTS } from "../shared/comments";
 
 class DishDetail extends Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            comments: COMMENTS
+        }
     }
 
     renderDish(dish) {
@@ -44,7 +47,7 @@ class DishDetail extends Component {
     render() {
         const dish = this.props.selectedDish;
         if (dish != null) {
-            const comments = dish.comments;
+            const comments = this.state.comments.filter((comment) => dish.id === comment.dishId);
             return (
                 <div className="container">
                     <div className="row">
