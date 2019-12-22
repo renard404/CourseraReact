@@ -8,7 +8,7 @@ const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
 const minLength = (len) => (val) => val && (val.length >= len);
 
-class DishDetail extends Component {
+class CommentForm extends Component{
     constructor(props) {
         super(props);
         this.state = {
@@ -26,42 +26,10 @@ class DishDetail extends Component {
         this.toggleModal();
         alert(JSON.stringify(values));
     }
-    renderDish(dish) {
+    render() {
         return (
-            <Card>
-                <CardImg width="100%" src={dish.image} alt={dish.name} />
-                <CardBody>
-                    <CardTitle>{dish.name}</CardTitle>
-                    <CardText>{dish.description}</CardText>
-                </CardBody>
-            </Card>
-        );
-    }
-    renderComments(comments) {
-        var months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept",
-            "Oct", "Nov", "Dec"];
-        if (comments) {
-            return (
-                comments.map((comment) => {
-                    const date = new Date(comment.date);
-                    return (
-                        <li>
-                            {comment.comment}
-                            <br></br>
-                            -- {comment.author}, {months[date.getMonth()]} {date.getDay()}, {date.getFullYear()}
-                        </li>
-                    )
-                })
-            )
-        }
-        else {
-            return (
-                <div></div>
-            )
-        }
-    }
-    CommentForm() {
-        return (
+            <div>
+            <Button outline onClick={this.toggleModal}><span className="fa fa-edit fa-lg"></span> Submit Comment</Button>
             <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
                 <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
                 <ModalBody>
@@ -71,16 +39,16 @@ class DishDetail extends Component {
                         </Row>
                         <Row className="form-group">
                             <Col>
-                                <Control.text model=".rating" id="rating" name="rating"
+                                <Control.select model=".rating" id="rating" name="rating"
                                     placeholder="Rating"
                                     className="form-control"
-                                    validators={{ required }}
-                                />
-                                <Errors className="text-danger" model=".rating" show="touched"
-                                    messages={{
-                                        required: "Required"
-                                    }}
-                                />
+                                >
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                                </Control.select>
                             </Col>
                         </Row>
                         <Row className="form-group">
@@ -119,7 +87,45 @@ class DishDetail extends Component {
                     </LocalForm>
                 </ModalBody>
             </Modal>
+            </div>
         )
+    }
+}
+
+class DishDetail extends Component {
+    renderDish(dish) {
+        return (
+            <Card>
+                <CardImg width="100%" src={dish.image} alt={dish.name} />
+                <CardBody>
+                    <CardTitle>{dish.name}</CardTitle>
+                    <CardText>{dish.description}</CardText>
+                </CardBody>
+            </Card>
+        );
+    }
+    renderComments(comments) {
+        var months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept",
+            "Oct", "Nov", "Dec"];
+        if (comments) {
+            return (
+                comments.map((comment) => {
+                    const date = new Date(comment.date);
+                    return (
+                        <li>
+                            {comment.comment}
+                            <br></br>
+                            -- {comment.author}, {months[date.getMonth()]} {date.getDay()}, {date.getFullYear()}
+                        </li>
+                    )
+                })
+            )
+        }
+        else {
+            return (
+                <div></div>
+            )
+        }
     }
     render() {
         const dish = this.props.dish;
@@ -147,8 +153,7 @@ class DishDetail extends Component {
                             <ul className="list-unstyled">
                                 {this.renderComments(comments)}
                             </ul>
-                            <Button outline onClick={this.toggleModal}><span className="fa fa-edit fa-lg"></span> Submit Comment</Button>
-                            {this.CommentForm()}
+                            <CommentForm />
                         </div>
                     </div>
                 </div>
