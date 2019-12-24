@@ -24,6 +24,7 @@ class CommentForm extends Component{
     }
     handleComment(values) {
         this.toggleModal();
+        this.props.addComment(this.props.dishId, values.rating, values.name, values.comment);
         alert(JSON.stringify(values));
     }
     render() {
@@ -70,11 +71,11 @@ class CommentForm extends Component{
                             </Col>
                         </Row>
                         <Row className="form-group">
-                            <Label md={{ offset: 1 }} htmlFor="message">Comment</Label>
+                            <Label md={{ offset: 1 }} htmlFor="comment">Comment</Label>
                         </Row>
                         <Row className="form-group">
                             <Col>
-                                <Control.textarea model=".message" id="message" name="message"
+                                <Control.textarea model=".comment" id="comment" name="comment"
                                     rows="4"
                                     className="form-control" />
                             </Col>
@@ -91,79 +92,75 @@ class CommentForm extends Component{
         )
     }
 }
-
-class DishDetail extends Component {
-    renderDish(dish) {
+function RenderDish({dish}) {
+    return (
+        <Card>
+            <CardImg width="100%" src={dish.image} alt={dish.name} />
+            <CardBody>
+                <CardTitle>{dish.name}</CardTitle>
+                <CardText>{dish.description}</CardText>
+            </CardBody>
+        </Card>
+    );
+}
+function RenderComments({comments}) {
+    var months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept",
+        "Oct", "Nov", "Dec"];
+    if (comments) {
         return (
-            <Card>
-                <CardImg width="100%" src={dish.image} alt={dish.name} />
-                <CardBody>
-                    <CardTitle>{dish.name}</CardTitle>
-                    <CardText>{dish.description}</CardText>
-                </CardBody>
-            </Card>
-        );
+            comments.map((comment) => {
+                const date = new Date(comment.date);
+                return (
+                    <li>
+                        {comment.comment}
+                        <br></br>
+                        -- {comment.author}, {months[date.getMonth()]} {date.getDay()}, {date.getFullYear()}
+                    </li>
+                )
+            })
+        )
     }
-    renderComments(comments) {
-        var months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept",
-            "Oct", "Nov", "Dec"];
-        if (comments) {
-            return (
-                comments.map((comment) => {
-                    const date = new Date(comment.date);
-                    return (
-                        <li>
-                            {comment.comment}
-                            <br></br>
-                            -- {comment.author}, {months[date.getMonth()]} {date.getDay()}, {date.getFullYear()}
-                        </li>
-                    )
-                })
-            )
-        }
-        else {
-            return (
-                <div></div>
-            )
-        }
+    else {
+        return (
+            <div></div>
+        )
     }
-    render() {
-        const dish = this.props.dish;
-        const comments = this.props.comments;
-        if (dish != null) {
-            return (
-                <div className="container">
-                    <div className="row">
-                        <Breadcrumb>
-                            <BreadcrumbItem><Link to="/menu">Menu</Link></BreadcrumbItem>
-                            <BreadcrumbItem active>{this.props.dish.name}</BreadcrumbItem>
-                        </Breadcrumb>
-                        <div className="col-12">
-                            <h3>{this.props.dish.name}</h3>
-                            <hr />
-                        </div>
-                    </div>
-
-                    <div className="row">
-                        <div className="col-12 col-md-5 m-1">
-                            {this.renderDish(dish)}
-                        </div>
-                        <div className="col-12 col-md-5 m-1">
-                            <h4>Comments</h4>
-                            <ul className="list-unstyled">
-                                {this.renderComments(comments)}
-                            </ul>
-                            <CommentForm />
-                        </div>
+}
+const DishDetail = (props) => {
+    if (props.dish != null) {
+        return (
+            <div className="container">
+                <div className="row">
+                    <Breadcrumb>
+                        <BreadcrumbItem><Link to="/menu">Menu</Link></BreadcrumbItem>
+                        <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
+                    </Breadcrumb>
+                    <div className="col-12">
+                        <h3>{props.dish.name}</h3>
+                        <hr />
                     </div>
                 </div>
-            );
-        }
-        else {
-            return (
-                <div></div >
-            );
-        }
+
+                <div className="row">
+                    <div className="col-12 col-md-5 m-1">
+                        <RenderDish dish={props.dish} />
+                    </div>
+                    <div className="col-12 col-md-5 m-1">
+                        <h4>Comments</h4>
+                        <ul className="list-unstyled">
+                            <RenderComments comments={props.comments} />
+                        </ul>
+                        <CommentForm addComment={props.addComment}
+                            dishId={props.dish.id} />
+                    </div>
+                </div>
+            </div>
+        );
+    }
+    else {
+        return (
+            <div></div >
+        );
     }
 }
 
