@@ -28,7 +28,7 @@ class CommentForm extends Component {
     }
     handleComment(values) {
         this.toggleModal();
-        this.props.addComment(this.props.dishId, values.rating, values.name, values.comment);
+        this.props.postComment(this.props.dishId, values.rating, values.name, values.comment);
         alert(JSON.stringify(values));
     }
     render() {
@@ -172,7 +172,7 @@ const DishDetail = (props) => {
                         <ul className="list-unstyled">
                             <RenderComments comments={props.comments} />
                         </ul>
-                        <CommentForm addComment={props.addComment}
+                        <CommentForm postComment={props.postComment}
                             dishId={props.dish.id} />
                     </div>
                 </div>
