@@ -1,9 +1,10 @@
 import React from 'react';
 import { Breadcrumb, BreadcrumbItem, Card, CardBody, CardHeader, Media } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { Loading } from "./LoadingComponent";
 
 function RenderLeaders({ leader }) {
-    if(leader){
+    if (leader) {
         return (
             <div key={leader.id} className="col-12 mt-5">
                 <Media tag="li">
@@ -19,17 +20,39 @@ function RenderLeaders({ leader }) {
             </div>
         )
     } else {
-        return(
+        return (
             <div></div>
         )
     }
 }
 function About(props) {
-    
-    const leaders = props.leaders.map((leader) => {
-        return (
-            <RenderLeaders leader={leader} />
-        )
+
+    const leaders = props.leaders.leaders.map((leader) => {
+        if (props.leaders.isLoading) {
+            return (
+                <div className="container">
+                    <div className="row">
+                        <Loading />
+                    </div>
+                </div>
+            )
+        }
+        else if (props.leaders.errMess) {
+            return (
+                <div className="container">
+                    <div className="row">
+                        <div className="col-12">
+                            <h4>{this.props.leaders.errMess}</h4>
+                        </div>
+                    </div>
+                </div>
+            )
+        }
+        else {
+            return (
+                <RenderLeaders leader={leader} />
+            )
+        }
     });
 
     return (
