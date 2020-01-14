@@ -115,8 +115,6 @@ function RenderDish({ dish }) {
     );
 }
 function RenderComments({ comments }) {
-    var months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept",
-        "Oct", "Nov", "Dec"];
     if (comments) {
         return (
             <Stagger in>
